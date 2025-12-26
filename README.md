@@ -1,4 +1,5 @@
-# ☁️ Qloud
+# ☁️ Qloud<img width="48" height="48" alt="image" src="https://github.com/user-attachments/assets/d7dd6c32-96a5-490f-882a-a223a5b76843" />
+
 
 **Qloud** is a token-based cloud storage web app where users can upload, access, and manage files **without login or passwords**.
 
