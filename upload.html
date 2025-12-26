@@ -149,8 +149,17 @@
 
   /* small screens */
   @media (max-width:1024px){
-    .sidebar{ left:10px; top:10px; bottom:10px; width:var(--sidebar-collapsed-w); }
-    .app{ margin-left:calc(var(--sidebar-collapsed-w) + var(--gap)); padding:16px; }
+ .sidebar.collapsed{
+    width: var(--sidebar-collapsed-w);
+  }
+  .sidebar:not(.collapsed){
+    width: var(--sidebar-w);
+  }
+  .sidebar{
+    left:10px;
+    top:10px;
+    bottom:10px;
+  }    .app{ margin-left:calc(var(--sidebar-collapsed-w) + var(--gap)); padding:16px; }
     .feature-panel{right:10px;width:320px;}
   }
   /* =========================
@@ -341,6 +350,7 @@ let files = [];
 
 /* ---------------- Sidebar hover behavior ---------------- */
 function applySidebarHoverBehavior(){
+    sidebar.classList.add('collapsed');
   if (window.innerWidth >= 1024) sidebar.classList.add('collapsed'); else sidebar.classList.remove('collapsed');
 
   sidebar.addEventListener('mouseenter', ()=> {
