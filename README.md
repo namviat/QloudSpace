@@ -32,3 +32,25 @@ Files uploaded with a token are accessible **only** using that token.
 
 - **Token = Account**
 - Each token maps to a Cloudinary folder:
+- - Users can access files only by providing the correct token.
+- No database or authentication system is used.
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend:** HTML, Tailwind CSS, Vanilla JavaScript
+- **Backend:** Vercel Serverless Functions
+- **Storage:** Cloudinary
+- **Hosting:** Vercel
+- **Version Control:** GitHub
+
+---
+
+## 🚀 Getting Started (Local Setup)
+
+### 1️⃣ Clone the repo
+```bash
+git clone https://github.com/namviat/Qloud.git
+cd Qloud
+
