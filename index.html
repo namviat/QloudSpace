@@ -398,18 +398,15 @@
     height: 90px;
     top: 16px;
     left: 16px;
+    transition: opacity 0.3s ease; 
   }
-   .portal-open .site-logo {
-    opacity: 0;
-    pointer-events: none;
-  }
-  #portalbox.is-focused ~ header .site-logo,
-  #portalbox:hover ~ header .site-logo {
+
+  .box-wrapper:has(.box:hover) ~ header .site-logo,
+  .box-wrapper:has(.box.is-focused) ~ header .site-logo {
     opacity: 0;
     pointer-events: none;
   }
 }
-
  
 </style>
 </head>
