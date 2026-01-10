@@ -395,9 +395,13 @@
 
 @media (max-width: 768px) {
   .site-logo {
-    height: 60px;
+    height: 90px;
     top: 16px;
     left: 16px;
+  }
+   .portal-open .site-logo {
+    opacity: 0;
+    pointer-events: none;
   }
   .box.is-focused ~ header .site-logo,
   .box:hover ~ header .site-logo {
