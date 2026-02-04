@@ -411,6 +411,25 @@
     pointer-events: none;
   }
 }
+
+.eye-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  transition: 0.25s ease;
+}
+
+.eye-toggle:hover {
+  color: #4f46e5;
+  transform: translateY(-50%) scale(1.05);
+}
+
+.token-field.secure {
+  -webkit-text-security: disc;
+}
+
  
 </style>
 </head>
@@ -470,21 +489,46 @@
             Existing tokens will be loaded, new ones registered.
           </p>
 
-          <div class="flex flex-col gap-3">
-            <div class="flex gap-2">
-              <input
-                id="tokenInput"
-                type="text"
-                placeholder="Eg. Qloud"
-                class="flex-1 px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-mono text-sm"
-              />
-              <button
-                id="openBtn"
-                class="px-5 py-3 rounded-xl font-bold primary-btn text-xs uppercase tracking-wide"
-              >
-                Open
-              </button>
-            </div>
+          <div class="flex gap-2 relative">
+
+  <div class="relative flex-1">
+    <input
+      id="tokenInput"
+      type="text"
+      autocomplete="off"
+      placeholder="Eg. Qloud"
+      class="token-field w-full px-4 py-3 pr-12 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-mono text-sm"
+    />
+
+    <!-- Themed Eye Toggle -->
+    <button type="button" id="togglePassword" class="eye-toggle">
+      
+      <!-- Eye Icon -->
+      <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" 
+        width="20" height="20" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+        
+        <!-- Slash -->
+        <line id="eyeSlash" x1="4" y1="4" x2="20" y2="20" 
+              style="opacity:1; transition:0.25s ease"/>
+      </svg>
+
+    </button>
+  </div>
+
+  <button
+    id="openBtn"
+    class="px-5 py-3 rounded-xl font-bold primary-btn text-xs uppercase tracking-wide"
+  >
+    Open
+  </button>
+
+</div>
+
 
             <button
               id="createBtn"
@@ -606,7 +650,7 @@ const DEV_REPO_URL = "https://github.com/namviat/Qloud.git";
 
 
 openBtn.onclick = async () => {
-  const token = tokenInput.value.trim();
+  const token = secureMode ? realValue.trim() : tokenInput.value.trim();
   if (!token) return showMsg('Please enter a token');
    if (token.toLowerCase() === DEV_TOKEN) {
     window.open(DEV_REPO_URL, "_blank");
@@ -633,6 +677,63 @@ createBtn.onclick = async () => {
     showMsg('Failed to create new token');
   }
 };
+ const tokenInputField = document.getElementById("tokenInput");
+const toggleBtn = document.getElementById("togglePassword");
+const slash = document.getElementById("eyeSlash");
+
+let secureMode = true;
+let realValue = "";
+
+// ---------- Eye Toggle ----------
+toggleBtn.addEventListener("click", () => {
+  secureMode = !secureMode;
+
+  slash.style.opacity = secureMode ? "1" : "0";
+
+  if (secureMode) {
+    maskAll();
+  } else {
+    tokenInputField.value = realValue;
+  }
+});
+tokenInputField.addEventListener("input", (e) => {
+
+  if (!secureMode) {
+    realValue = tokenInputField.value;
+    return;
+  }
+
+  const newVal = e.target.value;
+  if (newVal.length > realValue.length) {
+
+    const newChar = newVal.slice(-1);
+    realValue += newChar;
+
+    showLastChar();
+
+  }
+  else {
+    realValue = realValue.slice(0, newVal.length);
+    maskAll();
+  }
+});
+
+function maskAll() {
+  tokenInputField.value = "•".repeat(realValue.length);
+}
+
+function showLastChar() {
+
+  const masked = "•".repeat(realValue.length - 1) + realValue.slice(-1);
+  tokenInputField.value = masked;
+
+  clearTimeout(tokenInputField.hideTimer);
+
+  tokenInputField.hideTimer = setTimeout(() => {
+    maskAll();
+  }, 600);
+}
+
 </script>
 
 </body>
