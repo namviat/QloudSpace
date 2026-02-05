@@ -615,15 +615,23 @@ const tokenInput = document.getElementById('tokenInput');
 const openBtn = document.getElementById('openBtn');
 const createBtn = document.getElementById('createBtn');
 
-// Prevent portal collapse when focused
+portalBox.addEventListener('mouseenter', () => {
+  document.body.classList.add('portal-open');
+});
+portalBox.addEventListener('mouseleave', () => {
+  if (document.activeElement !== tokenInput) {
+    document.body.classList.remove('portal-open');}
+});
+
 tokenInput.addEventListener('focus', () => {
   portalBox.classList.add('is-focused');
   document.body.classList.add('portal-open');
 });
-
 tokenInput.addEventListener('blur', () => {
   portalBox.classList.remove('is-focused');
-  document.body.classList.remove('portal-open');
+  if (!portalBox.matches(':hover')) {
+    document.body.classList.remove('portal-open');
+  }
 });
 
 
