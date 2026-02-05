@@ -403,14 +403,10 @@
    width:330px;
    height:246px;
   }
-  body.portal-open .site-logo {
-  opacity: 0;
-  pointer-events: none;
-}
- .box.is-focused ~ header .site-logo {
-  opacity: 0;
-  pointer-events: none;
-}
+.box-wrapper:has(.box:hover) + header .site-logo,
+  .box-wrapper:has(.box.is-focused) + header .site-logo {
+    opacity: 0;
+    visibility: hidden;  }
 
 }
 
