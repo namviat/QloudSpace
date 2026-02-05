@@ -394,23 +394,16 @@
 }
 
 @media (max-width: 768px) {
-  .site-logo {
-    height: 90px;
-    top: 16px;
-    left: 16px;
-    transition: opacity 0.28s ease, transform 0.28s ease, visibility 0.28s;
-    will-change: opacity, transform;
+ .site-logo {height: 90px;top: 16px;left: 16px;}
+ .box-wrapper {top: 10px; }
+ .box.is-focused {transform: translateY(0);
   }
-  .box:hover, .box.is-focused {
-    width: 330px;
-    height: 246px;
-  }
+  .box:hover, .box.is-focused {width: 330px;height: 246px; }
+ 
   body.portal-open .site-logo {
     opacity: 0 !important;
     visibility: hidden !important;
-    pointer-events: none !important;
-    transform: translateY(-8px);
-    z-index: 800 !important;
+    pointer-events: none;
   }
 }
 
