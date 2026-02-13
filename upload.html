@@ -14,6 +14,20 @@
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
+  .file-card {
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.file-card.selected {
+  border: 2px solid #6366f1;
+  box-shadow:
+    0 0 0 1px rgba(99,102,241,0.25),
+    0 12px 28px rgba(99,102,241,0.15);
+  background: #f8fafc;
+  transform: translateY(-4px);
+}
+
   /* ─────────────────────────────
    QLOUD MINIMAL PREVIEW
 ───────────────────────────── */
@@ -503,97 +517,110 @@ async function fetchFiles(){
   }
 }
 
-    function renderFiles() {
-      countEl.textContent = `(${files.length})`;
-      fileGrid.innerHTML = '';
-      if (!files.length) { fileGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-8">No files uploaded yet</div>'; return; }
-      files.forEach(f => {
-        const name = f.public_id.split('/').pop();
-          const size = (f.bytes / 1024 / 1024).toFixed(2);
-          const icon = getFileIcon(f.public_id);
-          const card = document.createElement('div');
-          card.className = 'file-card relative';
-          card.innerHTML = `
-      <div class="absolute bottom-2 left-2 hidden select-wrap"><input type="checkbox" class="file-check w-4 h-4 cursor-pointer"></div>
+function renderFiles() {
+  countEl.textContent = `(${files.length})`;
+  fileGrid.innerHTML = '';
+
+  if (!files.length) {
+    fileGrid.innerHTML =
+      '<div class="col-span-full text-center text-slate-500 py-8">No files uploaded yet</div>';
+    return;
+  }
+
+  files.forEach(f => {
+    const name = f.public_id.split('/').pop();
+    const size = (f.bytes / 1024 / 1024).toFixed(2);
+    const icon = getFileIcon(f.public_id);
+
+    const card = document.createElement('div');
+    card.className = 'file-card relative';
+
+    card.innerHTML = `
       <div class="file-actions">
-        <button class="file-action-btn download-btn" title="Download"><i data-lucide="download" class="w-4 h-4"></i></button>
-        <button class="file-action-btn delete-btn" title="Delete"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+        <button class="file-action-btn download-btn" title="Download">
+          <i data-lucide="download" class="w-4 h-4"></i>
+        </button>
+        <button class="file-action-btn delete-btn" title="Delete">
+          <i data-lucide="trash-2" class="w-4 h-4"></i>
+        </button>
       </div>
-      <div class="text-3xl mb-2 text-indigo-500 preview-icon"><i data-lucide="${icon}"></i></div>
+
+      <div class="text-3xl mb-2 text-indigo-500 preview-icon">
+        <i data-lucide="${icon}"></i>
+      </div>
+
       <div class="font-semibold truncate">${name}</div>
       <div class="text-xs text-slate-500 mt-1 text-right">${size} MB</div>
     `;
-          const selectWrap = card.querySelector('.select-wrap');
-          const checkbox = card.querySelector('.file-check');
-          card.addEventListener('click', (e) => {
-            if (
-              e.target.closest('.file-actions') ||
-              e.target.closest('.preview-icon') ||
-              e.target.closest('.file-check')
-            ) return;
+    card.addEventListener('click', (e) => {
+      if (
+        e.target.closest('.file-actions') ||
+        e.target.closest('.preview-icon')
+      ) return;
 
-            selectWrap.classList.remove('hidden');
-          });
-          checkbox.addEventListener('click', (e) => {
-            e.stopPropagation();
+      card.classList.toggle('selected');
 
-            if (checkbox.checked) {
-              selectedFiles.add(f.public_id);
-            } else {
-              selectedFiles.delete(f.public_id);
-            }
-          });
-
-          checkbox.addEventListener('click', (e) => {
-            e.stopPropagation();
-
-            if (checkbox.checked) {
-              selectedFiles.add(f.public_id);
-            } else {
-              selectedFiles.delete(f.public_id);
-            }
-          });
-
-          card.querySelector('.delete-btn').onclick = async (e) => {
-            e.stopPropagation();
-
-            if (selectedFiles.size > 0) {
-              for (const id of selectedFiles) {
-                await deleteFile(id);
-              }
-              selectedFiles.clear();
-            } else {
-              await deleteFile(f.public_id);
-            }
-
-            fetchFiles();
-          };
-          card.querySelector('.download-btn').onclick = async (e) => {
-            e.stopPropagation();
-
-            if (selectedFiles.size > 0) {
-              for (const id of selectedFiles) {
-                const file = files.find(x => x.public_id === id);
-                if (!file) continue;
-
-                const fileName = file.public_id.split('/').pop();
-                await forceDownload(file.secure_url, fileName);
-              }
-              selectedFiles.clear();
-            } else {
-              await forceDownload(f.secure_url, name);
-            }
-          };
-
-          const iconEl = card.querySelector('.preview-icon'); iconEl.addEventListener('click', e => {
-            e.stopPropagation();
-            openPreview(f);
-          });
-
-          fileGrid.appendChild(card);
-        });
-        lucide.createIcons();
+      if (card.classList.contains('selected')) {
+        selectedFiles.add(f.public_id);
+      } else {
+        selectedFiles.delete(f.public_id);
       }
+    });
+
+    // DELETE
+    card.querySelector('.delete-btn').onclick = async (e) => {
+      e.stopPropagation();
+
+      if (selectedFiles.size > 0) {
+        for (const id of selectedFiles) {
+          await deleteFile(id);
+        }
+      } else {
+        await deleteFile(f.public_id);
+      }
+
+      clearSelection();
+      fetchFiles();
+    };
+
+    // DOWNLOAD
+    card.querySelector('.download-btn').onclick = async (e) => {
+      e.stopPropagation();
+
+      if (selectedFiles.size > 0) {
+        for (const id of selectedFiles) {
+          const file = files.find(x => x.public_id === id);
+          if (!file) continue;
+
+          const fileName = file.public_id.split('/').pop();
+          await forceDownload(file.secure_url, fileName);
+        }
+      } else {
+        await forceDownload(f.secure_url, name);
+      }
+
+      clearSelection();
+    };
+
+    // PREVIEW
+    card.querySelector('.preview-icon').addEventListener('click', (e) => {
+      e.stopPropagation();
+      openPreview(f);
+    });
+
+    fileGrid.appendChild(card);
+  });
+
+  lucide.createIcons();
+}
+
+  function clearSelection() {
+  selectedFiles.clear();
+
+  document.querySelectorAll('.file-card.selected').forEach(card => {
+    card.classList.remove('selected');
+  });
+}
 /* upload */
 uploadBox.addEventListener('click', ()=> fileInput.click());
 uploadBox.addEventListener('dragover', e=> { e.preventDefault(); uploadBox.classList.add('ring-2','ring-indigo-200'); });
@@ -1092,17 +1119,6 @@ document.addEventListener('keydown', e => {
     previewOverlay.classList.remove('show');
     previewMedia.innerHTML = '';
   }
-});
-document.addEventListener('click', (e) => {
-  if (e.target.closest('.file-card')) return;
-  document.querySelectorAll('.file-card').forEach(card => {
-    const wrap = card.querySelector('.select-wrap');
-    const checkbox = card.querySelector('.file-check');
-    if (!checkbox.checked) {
-      wrap.classList.add('hidden');
-    }
-  });
-
 });
 
 </script>
