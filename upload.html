@@ -70,24 +70,20 @@
   font-size: 13px;
 }
 .preview-icon {
-  display: inline-flex;
-  cursor: pointer;
-  color: inherit;
-  transition:
-    color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    filter 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.15s ease;
+  display: inline-flex;cursor: pointer;color: inherit;
 }
-.preview-icon:hover {
-  color: #4f46e5;
-  transform: translateY(-1px);  filter:
-    drop-shadow(0 2px 4px rgba(79, 70, 229, 0.18))
-    drop-shadow(0 0 8px rgba(79, 70, 229, 0.12));}
-.preview-icon:active {
-  transform: translateY(0);
+.preview-icon svg{
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-  
+.preview-icon:hover svg {
+  animation: filePop 0.35s ease forwards;
+}
+@keyframes filePop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.15); }
+  70%  { transform: scale(0.98); }
+  100% { transform: scale(1.05); }
+}
   :root{
     --sidebar-w:270px;
     --sidebar-collapsed-w:88px;
