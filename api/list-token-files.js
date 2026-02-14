@@ -7,9 +7,9 @@ module.exports = async (req, res) => {
   if (!token) return res.status(400).json({ error: 'Token required' });
 
   cloudinary.config({
-     cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dzvz7kzin',
-    api_key: process.env.CLOUDINARY_API_KEY || '484797141727837',
-    api_secret: process.env.CLOUDINARY_API_SECRET || '0AhRs9vHrqghA5ZcXRyMckXlGjk'
+     cloud_name: process.env.CLOUDINARY_CLOUD_NAME ,
+    api_key: process.env.CLOUDINARY_API_KEY ,
+    api_secret: process.env.CLOUDINARY_API_SECRET , 
   });
 
   try {
