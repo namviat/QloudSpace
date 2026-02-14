@@ -2,9 +2,9 @@
 const cloudinary = require('cloudinary').v2;
 
 module.exports = async (req, res) => {
-  const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || 'dzvz7kzin';
-  const API_KEY = process.env.CLOUDINARY_API_KEY || '484797141727837';
-  const API_SECRET = process.env.CLOUDINARY_API_SECRET || '0AhRs9vHrqghA5ZcXRyMckXlGjk';
+  const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME ;
+  const API_KEY = process.env.CLOUDINARY_API_KEY ;
+  const API_SECRET = process.env.CLOUDINARY_API_SECRET ; 
   const UPLOAD_FOLDER = process.env.CLOUDINARY_UPLOAD_FOLDER || 'mycloud';
 
   const BASE_FOLDER = 'mycloud';
