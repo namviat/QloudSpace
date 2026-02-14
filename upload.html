@@ -726,10 +726,8 @@ async function deleteFile(publicId){
     const res = await fetch('/api/delete-file', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ public_id: publicId }) });
     if (!res.ok) throw new Error();
     fetchFiles();
-    showMsg('File deleted','success');
-  } catch (err) { console.error(err); showMsg('Delete failed','error'); }
+  } catch (err) { console.error(err);}
 }
-
 async function forceDownload(url, filename){
   try {
     const res = await fetch(url);
