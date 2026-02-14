@@ -350,6 +350,11 @@
   box-shadow: 0 8px 20px rgba(185,28,28,0.2);
   transform: translateY(-2px);
 }  
+.sticky-header{
+  position: sticky;
+  top: 28px;
+  z-index: 40;
+} 
 </style>
 </head>
 <body>
@@ -425,7 +430,7 @@
 <main class="app" id="app">
   <div class="max-w-5xl mx-auto">
     <div id="msg" class="hidden mb-4"></div>
-
+<div class="sticky-header">
     <div id="uploadBox" class="upload-box card">
       <input id="fileInput" type="file" multiple hidden />
       <div class="text-4xl mb-2">☁️</div>
@@ -443,6 +448,7 @@
     <section class="mt-6">
       <div class="flex items-center justify-between mb-3">
         <h2 class="font-semibold">Files <span id="count" class="text-sm text-slate-500"></span></h2>
+      </div>      
       </div>
       <div id="fileGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
     </section>
